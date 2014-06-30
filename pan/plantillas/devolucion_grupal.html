@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block sub_titulo %}Venta Grupal{% endblock %}
+{% block active6 %}active{% endblock %}
+{% block section1 %}
+    <h2>Devoluciones</h2>
+    <hr>
+    <h3>Establecer Cliente</h3>
+    <div class="control-group required">
+        <label class="control-label" for="id_cliente_sele">Cliente</label>
+        <div class="controls">
+            <select name="cliente" id="id_cliente_sele">
+                {% for cliente in clientes %}
+                <option value='{{cliente.pk}}'>{{cliente}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <hr>
+    <form action='' method='post' id='venta_form'>{% csrf_token %}
+        {{ formset.management_form }}
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo de Pan</th>
+                    <th>Cliente</th>
+                    <th>Cantidad</th>
+                    <th>Vendidos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for formu in formset %}
+                <tr>
+                    {% for field in formu %}
+                        <td>{{ field }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        
+        </table>
+        <button class="btn btn-large btn-primary" type="submit" id='btn-submit'>Guardar</button>
+    </form>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Devoluciones Guardadas</h3>
+      </div>
+      <div class="modal-body">
+        <p>{{ guardados }} dato{{ guardados|pluralize }} guardado{{ guardados|pluralize }}.</p>
+        Detalle:
+        <ul>
+            {% for guardado in guardados_list %}
+                <li>{{guardado.tipo}} -> {{guardado.cantidad}}</li>
+            {% endfor %}
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <!--<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>-->
+        <button class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        function verificar_datos(tmp_input){
+            n=tmp_input.id.split("id_form-");
+            m=n[1].split("-cantidad");
+            id_num = m[0];
+            cant_add = parseInt($("#id_form-"+ id_num.toString() +"-cantidad").val(),10);
+            id_total = "#id_form-"+ id_num.toString() +"-total";
+            id_restante = "#id_form-"+ id_num.toString() +"-restantes";
+            restantes_cant = $(id_total).val()-cant_add;
+            if (isNaN(restantes_cant)){
+                $("#id_form-"+ id_num.toString() +"-cantidad").parent().removeClass('control-group error required');
+                $("#btn-submit").removeAttr('disabled');
+            }else{
+                if (restantes_cant<0){
+                    $("#id_form-"+ id_num.toString() +"-cantidad").parent().addClass('control-group error required');
+                    $("#btn-submit").attr("disabled","disabled");
+                    //alert('add');
+                }else{
+                    $("#id_form-"+ id_num.toString() +"-cantidad").parent().removeClass('control-group error required');
+                    $("#btn-submit").removeAttr('disabled');
+                }
+            }
+        }
+        
+
+        function AcceptNum(evt){
+            var nav4 = window.Event ? true : false;
+            var key = nav4 ? evt.which : evt.keyCode;
+            return (key <= 13 || (key >= 48 && key <= 57) );
+        }
+
+        $().ready(function() {
+            $('#id_cliente_sele').val({{id_cliente}});
+            if ({{ guardados }} > 0){
+                $('#myModal').modal('show');
+            }
+            $('#id_cliente_sele').change(function(){
+                document.location.href='/ventas/devolucion/grupal/'+$('#id_cliente_sele').val();
+                //$('select[name$="cliente"]').val($('#id_cliente_sele').val());
+            });
+            $("#venta_form").submit( function () {
+                $('select').removeAttr('disabled');
+                return true;
+                
+            });
+
+            
+        });
+    </script>
+{% endblock %}
+
+{% block style_css %}
+    <style type="text/css">
+        #contenido input{
+            width: 120px;
+        }
+        #contenido select{
+            width: 200px;
+        }
+        .error-input{
+            border-color: #953B39;
+            -webkit-box-shadow: 0 0 6px #D59392;
+            -moz-box-shadow: 0 0 6px #d59392;
+            box-shadow: 0 0 6px #D59392;
+        }
+        h2{
+            text-align: center;
+        }
+    </style>
+{% endblock %}

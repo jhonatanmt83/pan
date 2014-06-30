@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block active6 %}active{% endblock %}
+{% block sub_titulo %}Ventas{% endblock %}
+{% block section1 %}
+    <form  method='post' action='' id='formu_reporte' class="form-horizontal">{% csrf_token %}
+        {{ cliente_form|as_bootstrap }}
+        <div class="control-group">
+            <div class="controls">
+                <button class="btn btn-large btn-primary" type="submit">Consultar</button>
+            </div>
+        </div>
+    </form>
+    
+    
+    <!--<table  class="table table-striped table-hover">-->
+    
+    
+    <div class='span12'>
+        <div class='span9'>
+            <select id="columnas" onchange="sorter.search('query')"></select>
+            <input type="text" id="query" onkeyup="sorter.search('query')" />
+        </div>
+        <div class="span3">
+            <div>Mostrando <span id="startrecord"></span>-<span id="endrecord"></span> de <span id="totalrecords"></span></div>
+        </div>
+    </div>
+    <table cellpadding="0" cellspacing="0" border="0" id="table" class="tinytable">
+        <caption><h2>Deudores</h2></caption>
+        <thead>
+            <tr>
+                <th><h3>Cliente</h3></th>
+                <th><h3>Tippo de pan</h3></th>
+                <th><h3>Deuda</h3></th>
+                <th><h3>Estado</h3></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deudor in deudores %}
+            <tr>
+                <td>{{ deudor.cliente }}</td>
+                <td>{{ deudor.tipopan }}</td>
+                <td>{{ deudor.monto_punto }}</td>
+                <td class='text-error'><a href="/ventas/pagar/{{deudor.pk}}" >Falta Cancelar</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        
+    </table>
+    <div id="tablefooter" class='span12'>
+          <div id="tablenav">
+                <div id='botones'>
+                    <img src="/static/css/images/first.gif" width="16" height="16" alt="First Page" onclick="sorter.move(-1,true)" />
+                    <img src="/static/css/images/previous.gif" width="16" height="16" alt="First Page" onclick="sorter.move(-1)" />
+                    <img src="/static/css/images/next.gif" width="16" height="16" alt="First Page" onclick="sorter.move(1)" />
+                    <img src="/static/css/images/last.gif" width="16" height="16" alt="Last Page" onclick="sorter.move(1,true)" />
+                </div>
+                <div>
+                    <select id="pagedropdown"></select>
+                </div>
+                <div id='view_all'>
+                    <a href="javascript:sorter.showall()">Ver todo</a>
+                </div>
+            </div>
+            <div id="tablelocation">
+                <div>
+                    <select onchange="sorter.size(this.value)">
+                    <option value="5">5</option>
+                        <option value="10" selected="selected">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span>Entradas por página</span>
+                </div>
+                <div class="page">Página <span id="currentpage"></span> de <span id="totalpages"></span></div>
+            </div>
+        </div>
+    <script type="text/javascript" src="/static/js/tiny.js"></script>
+    <script type="text/javascript">
+    var sorter = new TINY.table.sorter('sorter','table',{
+        headclass:'head',
+        ascclass:'asc',
+        descclass:'desc',
+        evenclass:'evenrow',
+        oddclass:'oddrow',
+        evenselclass:'evenselected',
+        oddselclass:'oddselected',
+        paginate:true,
+        size:10,
+        colddid:'columnas',
+        currentid:'currentpage',
+        totalid:'totalpages',
+        startingrecid:'startrecord',
+        endingrecid:'endrecord',
+        totalrecid:'totalrecords',
+        pageddid:'pagedropdown',
+        sortcolumn:1,
+        sortdir:1,
+        sum:[2],
+        columns:[{index:2, format:'$', decimals:2}],
+        init:true
+    });
+
+  </script>
+{% endblock %}
+{% block style_css %}
+<link rel="stylesheet" href="/static/css/styletiny.css" type="text/css" />
+<style type="text/css">
+    #tablefooter select {width: 70px;margin-bottom: 2px;}
+    #view_all {margin-top: 5px;}
+    #botones {margin-top: 5px;}
+</style>
+{% endblock %}

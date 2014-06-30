@@ -1,0 +1,7 @@
+/* My custom styles */
+#contenido input{
+	width: 150px;
+}
+#contenido select{
+	width: 200px;
+}

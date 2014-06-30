@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block sub_titulo %}Almacen{% endblock %}
+{% block active5 %}active{% endblock %}
+{% block section1 %}
+{% if mensaje != '' %}
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Correcto!</strong> {{mensaje}}.
+    </div>
+{% endif %}
+    <form action='' method='post'  class="form-horizontal">{% csrf_token %}
+        {{formu|as_bootstrap}}
+        <div class="control-group">
+            <div class="controls">
+                <button class="btn btn-large btn-primary" type="submit">Guardar</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    function AcceptNum(evt){
+        var nav4 = window.Event ? true : false;
+        var key = nav4 ? evt.which : evt.keyCode;
+        return (key <= 13 || (key >= 48 && key <= 57) || key == 44);
+    }
+</script>
+
+{% endblock %}

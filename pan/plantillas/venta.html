@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block active6 %}active{% endblock %}
+{% block sub_titulo %}Ventas{% endblock %}
+{% block section1 %}
+    Restantes: <input   type='text' id='restantes' readonly><br/> 
+    <form  method='post' action=''>{% csrf_token %}
+        {{ formulario|as_bootstrap }}
+        <!--
+        <label>Panes Restantes</label>
+        <input   type='text' id='restantes'><br/>-->
+        Valor de venta: <input   type='text' id='id_precio' readonly><br/> 
+        <input class='btn btn-large btn-primary'  type='submit' value='Guardar' id='btn-submit'>
+    </form>
+                
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+var precio = 0;
+var restantes = 0;
+
+function verificar_datos(){
+    //alert('ola');
+    ingresado = $('#id_cantidad').val();
+    valor_actual = parseInt(restantes-ingresado);
+    precio_add = precio * ingresado;
+    if (isNaN(valor_actual)){
+        $('#id_precio').val("0.00");
+        $('#restantes').val(restantes);
+    }
+    else{
+        if (valor_actual<0){
+            $("#btn-submit").attr("disabled","disabled");
+            //$('#restantes').val("0");
+            //$('#id_precio').val("0");
+            //$('#id_cantidad').val("");
+            //alert('No tiene unidades suficientes.');
+        }
+        else{
+            $('#id_precio').val(precio_add.toFixed(2));
+            $('#restantes').val(valor_actual);
+            $("#btn-submit").removeAttr('disabled');
+        }
+        
+    }
+}
+
+function obtener_datos(){
+    //alert('ola');
+    id_pan = $('#id_tipopan').val();
+    $.getJSON('/datos_pan/'+id_pan,function(data){
+        $.each(data, function(index, produccion){
+            $('#restantes').val(produccion["stock"]);
+            $('#id_precio').val("0.00");
+            restantes = parseInt(produccion["stock"],10);
+            precio = produccion["precio"];
+        });
+    });
+}
+
+function AcceptNum(evt){
+    var nav4 = window.Event ? true : false;
+    var key = nav4 ? evt.which : evt.keyCode;
+    return (key <= 13 || (key >= 48 && key <= 57) || key == 44);
+}
+</script>
+{% endblock %}
+

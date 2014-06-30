@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block active6 %}active{% endblock %}
+{% block sub_titulo %}Ventas{% endblock %}
+{% block section1 %}
+<div class="row">
+    <!-- onClick="javascript:document.location.href='/ventas/venta/'" 
+     onClick="javascript:document.location.href='/ventas/venta/'"
+    -->
+    <div class="span12">
+        
+        <button class="btn btn-large btn-block btn-primary" type="button" onClick="javascript:document.location.href='/ventas/venta/'">Vender Individualmente</button>
+        <button class="btn btn-large btn-block btn-primary" type="button" onClick="javascript:document.location.href='/ventas/venta/grupal/1/'">Vender Grupalmente</button>
+        <button class="btn btn-large btn-block btn-primary" type="button" onClick="javascript:document.location.href='/ventas/deudores/'">Deudores</button>
+        <button class="btn btn-large btn-block btn-primary" type="button" onClick="javascript:document.location.href='/ventas/devolucion/grupal/1/'">Devolución</button>
+    </div>
+</div>
+{% endblock %}

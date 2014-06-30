@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block active2 %}active{% endblock %}
+{% block sub_titulo %}Reportes{% endblock %}
+{% block section1 %}
+    <ul>
+        <li><a href="/reporte/ingresos/">Ingresos por semana</a></li>
+        <li><a href="/reporte/ingresos/hoy/">Ingresos de hoy</a></li>
+        <li><a href="/reporte/ventas/">Ventas</a></li>
+        <li><a href="/reporte/egresos/">Egresos</a></li>
+        <li><a href="/reporte/general/">Reporte general</a></li>
+        <li><a href="/reporte/ganancias/">Reporte de ganancias</a></li>
+    </ul>
+{% endblock %}

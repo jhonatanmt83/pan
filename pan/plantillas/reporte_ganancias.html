@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block sub_titulo %}Reporte de egresos{% endblock %}
+{% block active2 %}active{% endblock %}
+{% block extra_head %}
+    {{ formulario.media }}
+{% endblock %}
+{% block section1 %}
+<form action='' method='post' class="form-inline">{% csrf_token %}
+    {{ formulario|as_bootstrap }}
+    <button class="btn btn-primary">Consultar</button>
+</form>
+{% if fecha_ini %}
+    <table  class="table table-striped tsable-bordered">
+        <caption><h2>Reporte de ganancias desde el {{fecha_ini|date:"d F \d\e Y"}} al {{fecha_fin|date:"d F \d\e Y"}}</h2></caption>
+        <thead>
+            <tr>
+                <th>Tipo de pan</th>
+                <th>Ingresos</th>
+                <th>Produccion</th>
+                <th>Devoluciones</th>
+                <th>Vendido</th>
+                <th>Pagado</th>
+                <th>Restante</th>
+                <th>Ganancia</th>
+            </tr>
+        </thead>
+        {% for dato in datos %}
+        <tbody>
+            <tr>
+                <td>{{ dato.tipo }}</td>
+                <td>{{ dato.total_ingresos }}</td>
+                <td>{{ dato.produccion }}</td>
+                <td>{{ dato.total_devoluciones }}</td>
+                <td>{{ dato.total_ventas }}</td>
+                <td>{{ dato.total_pagado }}</td>
+                <td>{{ dato.resta }}</td>
+                <td>{{ dato.ganancia }}</td>
+            </tr>
+        </tbody>
+
+        {% empty %}
+         <tr>
+            <td colspan='8'><b>No se han econtrado reportes.</b></td>
+        </tr>
+         {% endfor %}
+    </table>
+    <hr>
+    <div class ='span4'>
+        <h3>Totales</h3>
+    <table  class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Ingresos</td>
+                <td>{{totales.ingresos}}</td>
+            </tr>
+            <tr>
+                <td>Ventas</td>
+                <td>{{totales.ventas}}</td>
+            </tr>
+            <tr>
+                <td>Devoluciones</td>
+                <td>{{totales.devoluciones}}</td>
+            </tr>
+            <tr>
+                <td>Resta</td>
+                <td>{{totales.resta}}</td>
+            </tr>
+            <tr>
+                <td>Pagado</td>
+                <td>{{totales.pagado}}</td>
+            </tr>
+            <tr>
+                <td>Produccion</td>
+                <td>{{totales.produccion}}</td>
+            </tr>
+            <tr>
+                <td>Ganancia</td>
+                <td>{{totales.ganancia}}</td>
+            </tr>
+            <tr>
+                <td>Ganancia Neta</td>
+                <td>{{totales.ganancia_neta}}</td>
+            </tr>
+            <tr>
+                <td>Egresos</td>
+                <td>{{total_egresos}}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $().ready(function(){
+        $( "#id_fecha1" ).change(function () {
+            $("#id_fecha1").datepicker( "hide" );
+        });
+        $( "#id_fecha2" ).change(function () {
+            $("#id_fecha2").datepicker( "hide" );
+        });
+    });
+</script>
+{% endblock %}

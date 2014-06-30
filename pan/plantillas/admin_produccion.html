@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block sub_titulo %}Produccion{% endblock %}
+{% block active0 %}active{% endblock %}
+{% block section1 %}
+    <form action='' method='post' id='formulario'>{% csrf_token %}
+        {{ formset.management_form }}
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo de Pan</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for formu in formset %}
+                <tr>
+                    {% for field in formu %}
+                        <td {% if field.errors %}class='control-group error required'{% endif %}>{{ field }}</td>
+                        {% if field.errors and field.label == 'Stock' %}
+                            <td class='control-group error required'>
+                                <p style='color:red;'>{{field.errors.as_text}}</p>
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        
+        </table>
+         
+        <button class="btn btn-large btn-primary" type="submit">Guardar</button>
+    </form>
+
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        $().ready(function() {
+            $('select').attr("disabled","disabled");;
+            $("#formulario").submit( function () {
+                $('select').removeAttr('disabled');
+                return true;
+            });
+            
+        });
+    </script>
+{% endblock %}

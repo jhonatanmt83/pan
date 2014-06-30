@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block active0 %}active{% endblock %}
+{% block sub_titulo %}Ventas{% endblock %}
+{% block section1 %}
+<div class="row">
+    <!-- onClick="javascript:document.location.href='/ventas/venta/'" 
+     onClick="javascript:document.location.href='/ventas/venta/'"
+    -->
+    <div class="span12">
+        <a href="/produccion/" class='btn btn-large btn-primary'><i class="icon-th-list icon-white"></i> Editar Producción</a>
+        <br>
+        <br>
+        <a href="/operaciones/change_password/" class='btn btn-large btn-primary'><i class="icon-th-list icon-white"></i> Cambiar contraseña</a>
+        <br>
+        <br>
+        <a href="/admin/auth/user/" class='btn btn-large btn-primary'><i class="icon-th-list icon-white"></i> Administrar Usuarios</a>
+        <br>
+        <br>
+        <a href="/admin/auth/user/add/" class='btn btn-large btn-primary'><i class="icon-plus icon-white"></i> Agregar Nuevo Usuario</a>
+    </div>
+</div>
+{% endblock %}

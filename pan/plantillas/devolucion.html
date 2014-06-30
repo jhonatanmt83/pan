@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block active6 %}active{% endblock %}
+{% block sub_titulo %}Devolucion{% endblock %}
+{% block section1 %}
+{% if mensaje != '' %}
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Correcto!</strong> {{mensaje}}.
+    </div>
+{% endif %}
+    Vendidos: <input   type='text' id='vendidos' readonly><br/> 
+    <form  method='post' action=''>{% csrf_token %}
+        {{ formulario|as_bootstrap }}
+        <input class='btn btn-large btn-primary'  type='submit' value='Guardar' id='btn-submit'>
+    </form> 
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+var vendidos = 0;
+
+function verificar_datos(){
+    ingresado = $('#id_cantidad').val();
+    valor_actual = parseInt(vendidos-ingresado);
+    if (isNaN(valor_actual)){
+        $("#btn-submit").attr("disabled","disabled");
+    }
+    else{
+        if (valor_actual<0){
+            $("#btn-submit").attr("disabled","disabled");
+        }
+        else{
+            $("#btn-submit").removeAttr('disabled');
+        }
+        
+    }
+}
+
+function obtener_datos(){
+    id_pan = $('#id_tipopan').val();
+    id_cliente = $('#id_cliente').val();
+    var obtenido = '';
+    if (id_pan!='' && id_cliente!=''){
+        $.getJSON('/datos_deuda/'+id_pan+'/'+id_cliente,function(data){
+            obtenido = '';
+            $.each(data, function(index, deuda){
+                obtenido = 'si';
+                $('#vendidos').val(deuda["cantidad"]);
+                vendidos = parseInt(deuda["cantidad"],10);
+            });
+        });
+        if (obtenido == ''){
+            $('#vendidos').val(0);
+                vendidos = 0;
+        }
+    }else{
+        $("#btn-submit").attr("disabled","disabled");
+    }
+    
+}
+
+function AcceptNum(evt){
+    var nav4 = window.Event ? true : false;
+    var key = nav4 ? evt.which : evt.keyCode;
+    return (key <= 13 || (key >= 48 && key <= 57) || key == 44);
+}
+</script>
+{% endblock %}
+

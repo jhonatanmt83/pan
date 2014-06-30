@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block sub_titulo %}Almacen{% endblock %}
+{% block active1 %}active{% endblock %}
+{% block section1 %}
+    <form action='' method='post' id='formulario'>{% csrf_token %}
+        {{ formset.management_form }}
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo de Pan</th>
+                    <th>Cantidad</th>
+                    <th>Saldo Inicial</th>
+                    <th>Precio</th>
+                    <th>Precio Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for formu in formset %}
+                <tr>
+                    {% for field in formu %}
+                        <td>{{ field }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        
+        </table>
+        <button class="btn btn-large btn-primary" type="submit">Guardar</button>
+    </form>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Datos Guardados</h3>
+      </div>
+      <div class="modal-body">
+        <p>{{ guardados }} dato{{ guardados|pluralize }} guardado{{ guardados|pluralize }}.</p>
+        Detalle:
+        <ul>
+            {% for guardado in guardados_list %}
+                <li>{{guardado.tipo}} -> {{guardado.cantidad}}</li>
+            {% endfor %}
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <!--<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>-->
+        <button class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        function precio_total(tmp_input){
+            n=tmp_input.id.split("id_form-");
+            m=n[1].split("-cantidad");
+            id_num = m[0];
+            cant_add = parseInt($("#id_form-"+ id_num.toString() +"-cantidad").val(),10);
+            precio = parseFloat($("#id_form-"+ id_num.toString() +"-precio").val());
+            id_total = "#id_form-"+ id_num.toString() +"-precio_total";
+            precio_total_var=precio*cant_add;
+            if (isNaN(precio_total_var)){
+                $(id_total).val('0.00');
+            }else{
+                $(id_total).val(precio_total_var.toFixed(2));
+            }
+        }
+        
+
+        function AcceptNum(evt){
+            var nav4 = window.Event ? true : false;
+            var key = nav4 ? evt.which : evt.keyCode;
+            return (key <= 13 || (key >= 48 && key <= 57) );
+        }
+
+        $().ready(function() {
+            if ({{ guardados }} > 0){
+                $('#myModal').modal('show');
+            }
+            $("#formulario").submit( function () {
+                $('select').removeAttr('disabled');
+                return true;
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block style_css %}
+    <link rel='stylesheet' href='/static/css/custom.css'>
+{% endblock %}

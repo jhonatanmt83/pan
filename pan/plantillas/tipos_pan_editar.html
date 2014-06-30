@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block sub_titulo %}Almacen{% endblock %}
+{% block active3 %}active{% endblock %}
+{% block section1 %}
+    <form action='' method='post'>{% csrf_token %}
+        {{formu|as_bootstrap}}
+        <button class="btn btn-large btn-primary" type="submit">Guardar</button>
+    </form>
+{% endblock %}

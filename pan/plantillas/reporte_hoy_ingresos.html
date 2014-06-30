@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block sub_titulo %}Reporte de ingresos de hoy{% endblock %}
+{% block active2 %}active{% endblock %}
+{% block section1 %}
+    <table  class="table table-striped table-bordered">
+        <caption><h2>REPORTES DE HOY</h2></caption>
+        <tr>
+            <th>Tipo de pan</th>
+            <th>Fecha de produccion</th>
+            <th>Numero de panes(bolsas) producidos</th>
+        </tr>
+        {% for ingreso in ingresos %}
+        <tr>
+            <td>{{ ingreso.tipopan }}</td>
+            <td>{{ ingreso.fecha }}</td>
+            <td>{{ ingreso.cantidad}}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan='3'><b>No se han econtrado reportes.</b></td>
+        </tr>
+        {% endfor %}
+    </table>          
+{% endblock %}
+
+

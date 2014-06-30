@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block active2 %}active{% endblock %}
+{% block sub_titulo %}Reporte de ventas{% endblock %}
+{% block extra_head %}
+    {{ fechaform.media }}
+{% endblock %}
+{% block section1 %}
+    <form  method='post' action='' id='formu_reporte'>{% csrf_token %}
+        <div class='span12'>
+            <div class='span4'>
+                {{ fechaform|as_bootstrap }}
+                <br>
+                <input class='btn btn-large btn-primary' type='submit' value='Consultar'>
+            </div>
+            <div class='span5'>
+                <br>
+                <br>
+                <a href="#" id='hoy'>Hoy</a>
+            </div>
+        </div>
+    </form>
+    <h2>Reportes general del dia {{fecha|date:"d F \d\e Y"}}</h2>
+    
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Productos</th>
+                    <th>Saldo Inicial</th>
+                    {% for cliente in clientes %}
+                        <th>{{cliente}}</th>
+                    {% endfor %}
+                    <th>Salida Total</th>
+                    <th>Saldo</th>
+                    <th>Produccion</th>
+                    <th>Saldo Final</th>
+                </tr>  
+            </thead>
+            <tbody>
+            {% for dato in devolver %}
+                <tr>
+                    <td>{{dato.tipo}}</td>
+                    <td>{{dato.saldo_inicial}}</td>
+                    {% for venta in dato.ventas %}
+                        <td>{{venta}}</td>
+                    {% endfor %}
+                    <td>{{dato.total_ventas}}</td>
+                    <td>{{dato.saldo}}</td>
+                    <td>{{dato.ingreso}}</td>
+                    <td>{{dato.saldo_final}}</td>
+                </tr>   
+            {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    $().ready(function(){
+        $('#hoy').click(function () {
+            $( "#id_fecha" ).datepicker( "setDate", new Date() );
+        });
+        $( "#id_fecha" ).change(function () {
+            $("#id_fecha").datepicker( "hide" );
+        });
+    });
+</script>
+{% endblock %}

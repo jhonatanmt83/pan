@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block active6 %}active{% endblock %}
+{% block sub_titulo %}Pagar deuda{% endblock %}
+{% block section1 %}
+    <h2>Pagar deuda</h2>
+    <form  method='post' action=''>{% csrf_token %}
+        {{ formulario|as_bootstrap }}
+        <input class='inputsubmit' type='submit' value='Guardar'>
+    </form>
+                
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+var valor_ant = parseFloat("{{cant_restante}}".replace(",", "."));
+
+$(document).ready(function(){
+   
+   $("#id_monto").focus();
+});
+
+function actualiza_campos(){
+    valor_actual = parseFloat($('#id_monto').val().replace(",", "."));
+    valor_total= parseFloat($('#id_total').val().replace(",", "."));
+    valor_restante = valor_total-valor_actual;
+    if (isNaN(valor_restante)){
+        $('#id_restante').val(valor_ant);
+    }
+    else{
+        $('#id_restante').val(valor_restante.toFixed(2));
+    }
+}
+
+
+</script>
+{% endblock %}
+

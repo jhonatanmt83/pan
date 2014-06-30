@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load bootstrap_toolkit %}
+{% block sub_titulo %}Reporte de egresos{% endblock %}
+{% block active2 %}active{% endblock %}
+{% block extra_head %}
+    {{ formulario.media }}
+{% endblock %}
+{% block section1 %}
+<form action='' method='post' class="form-inline">{% csrf_token %}
+    {{ formulario|as_bootstrap }}
+    <button class="btn btn-primary">Consultar</button>
+</form>
+    <table  class="table table-striped tsable-bordered">
+        <caption><h2>Reporte de egresos{% if fecha_ini %} desde el {{fecha_ini|date:"d F \d\e Y"}} al {{fecha_fin|date:"d F \d\e Y"}}{% endif %}</h2></caption>
+        <thead>
+            <tr>
+                <th>Monto</th>
+                <th>Fecha</th>
+                <th>Descripción</th>
+                <th>Operaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for egreso in egresos %}
+            <tr id="{{egreso.pk}}">
+                <td>{{ egreso.monto }}</td>
+                <td>{{ egreso.fecha }}</td>
+                <td>{{ egreso.descripcion}}</td>
+                <td><button class="btn" onclick='eliminar({{egreso.pk}});'><i class='icon-remove'></i> Eliminar</button></td>
+            </tr>
+        {% empty %}
+        </tbody>
+        <tr>
+            <td colspan='3'><b>No se han econtrado reportes.</b></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <p>Total: S/. <span>{{total}}</span></p>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+    function eliminar(id_egreso){
+        var acepto = confirm("¿Esta seguro de eliminar el egreso?");
+        var resultado = "False";
+        if (acepto==true){
+            url_completa = '/eliminar/egreso/'+id_egreso;
+            $.getJSON(url_completa,function(data){
+                $.each(data, function(index, resu){
+                    resultado = resu["resultado"];
+                    if (resultado=='True'){
+                        $('#' + id_egreso).remove();
+                    }
+                });
+            });
+            
+            //$('#' + id_egreso).remove();
+        }
+    }
+    $().ready(function(){
+        $( "#id_fecha1" ).change(function () {
+            $("#id_fecha1").datepicker( "hide" );
+        });
+        $( "#id_fecha2" ).change(function () {
+            $("#id_fecha2").datepicker( "hide" );
+        });
+    });
+    
+</script>
+{% endblock %}
